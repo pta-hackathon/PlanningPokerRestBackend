@@ -74,11 +74,55 @@ public class PlanningPokerController {
 	
 
 	
+	private int calcMaxStage() {
+		int maxstate=0;
+		for (User u: userimpl.getAll()) {
+			int st=calcUserstage(u);
+			if (st>maxstate) maxstate=st;
+		}
+		return maxstate;
+	}
+
+	
+	private int calcUserstage(User u) {
+		int rc=0;
+		if (u.getIsSignedIn()>0) {
+			rc++;
+		}
+		if (u.getCompetence()!=null && u.getCompetence().length()>0) {
+			rc++;
+		}
+
+		boolean fnd=false;
+		for (Brainstorming b: brainimpl.getAll()) {
+			if (b.getIdUser()==u.getId()) fnd=true;
+		}
+		if (fnd) rc++;
+
+		fnd=false;
+		for (Estimate e: estimateimpl.getAll()) {
+			if (e.getIdUser()==u.getId()) fnd=true;
+		}
+		if (fnd) rc++;
+		
+		return rc;
+	}
+	
 	
 	// Requests bzgl. User
 	@GetMapping("/userliste")
 	public List<User> getUserListe() {
-		return userimpl.getAll();
+		int maxstate=calcMaxStage();
+		List<User> usr= userimpl.getAll();
+		for (User u: usr) {
+			int st=calcUserstage(u);
+			if (st==maxstate) {
+				u.setUserstatus("fertig");
+			} else {
+				u.setUserstatus("warte");
+			}
+		}
+		return usr;
 	}
 
 	@PostMapping("/anmelden")
@@ -157,7 +201,7 @@ public class PlanningPokerController {
 	
 	@PostMapping("/schaetzung")
 	public ResponseEntity<StatusMsg> postEstimate(
-			@RequestParam(name="user") String username, 
+			@RequestParam(name="username") String username, 
 			@RequestParam(name="ticket") int idTicket,
 			@RequestParam(name="minval") double minval ,
 			@RequestParam(name="maxval") double maxval) 
@@ -166,6 +210,11 @@ public class PlanningPokerController {
 		if (u==null) {
 			return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
 		}
+		
+		// Alte Schaetzung wegwerfen
+		estimateimpl.delete(u.getId(), idTicket);
+		
+		// Schaetzung neu ablegen
 		Estimate e=new Estimate();
 		e.setId(u.getId());
 		e.setIdTicket(idTicket);
@@ -273,6 +322,11 @@ public class PlanningPokerController {
 	public List<TabellenEintrag> getCalcTabelle() {
 		List<TabellenEintrag> erg=new ArrayList<>();
 
+		for (User u: userimpl.getAll()) {
+			TabellenEintrag t=new TabellenEintrag(u.getId(), u.getName());
+			erg.add(t);
+		}
+		
 		for (Tickets tckt: ticketimpl.getAll()) {
 			if (tckt.getActualEffort()>0) {
 				for (Estimate est: estimateimpl.getAll()) {

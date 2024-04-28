@@ -3,6 +3,7 @@ package pta.MultistagePoker.dbEntities;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 
 @Entity
 public class User {
@@ -19,6 +20,13 @@ public class User {
 	@Column
 	int isSignedIn;
 
+	@Column
+	int isTestUser;	
+
+	@Transient
+	String userstatus;	
+	
+	
 	public int getId() {
 		return id;
 	}
@@ -49,6 +57,22 @@ public class User {
 
 	public void setCompetence(String competence) {
 		this.competence = competence;
+	}
+
+	public int getIsTestUser() {
+		return isTestUser;
+	}
+
+	public void setIsTestUser(int isTestUser) {
+		this.isTestUser = isTestUser;
+	}
+
+	public String getUserstatus() {
+		return userstatus;
+	}
+
+	public void setUserstatus(String userstatus) {
+		this.userstatus = userstatus;
 	}
 
 

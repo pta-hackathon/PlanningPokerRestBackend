@@ -15,7 +15,7 @@ public class TabellenEintrag implements Comparable<TabellenEintrag> {
 	
 	@Override
 	public int compareTo(TabellenEintrag o) {
-		return Math.round( (int) (punkteSumme-o.getPunkteSumme()) );
+		return Math.round( (int) (o.getPunkteSumme()-punkteSumme) );
 	}
 
 	public void addPunkte(double p) {

@@ -66,4 +66,13 @@ public class EstimateServiceImpl implements EstimateService {
 		return Math.sqrt(sumabw);		
 	}
 
+	@Override
+	public void delete(int userid, int ticketid) {
+		for (Estimate est: repo.findAll()) {
+			if (est.getIdUser()==userid && est.getIdTicket()==ticketid) {
+				repo.deleteById(est.getId());
+			}
+		}		
+	}
+
 }

@@ -10,6 +10,7 @@ public interface EstimateService {
 
 	void postNew(Estimate bs);
 
+	void delete(int userid, int ticketid);
 	
 	double calcMittelwert(int idTicket);
 	double calcKonsistenz(int idTicket);

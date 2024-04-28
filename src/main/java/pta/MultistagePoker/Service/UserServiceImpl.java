@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByName(String name) {
 		for (User u: this.getAll()) {
-			if (u.getName().equals(name)) {
+			if (u.getName().equalsIgnoreCase(name)) {
 				return u;
 			}
 		}		
