@@ -12,6 +12,8 @@ public interface EstimateService {
 
 	void delete(int userid, int ticketid);
 	
+	void deleteAll();
+	
 	double calcMittelwert(int idTicket);
 	double calcKonsistenz(int idTicket);
 	

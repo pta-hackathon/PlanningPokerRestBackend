@@ -36,11 +36,18 @@ public class BrainstormingServiceImpl implements BrainstormingService {
 	@Override
 	public void postNew(Brainstorming bs) {
 		repo.save(bs);
+		em.flush();
 	}
 
 	@Override
 	public void deleteAll() {
 		repo.deleteAll();
+	}
+
+	@Override
+	public void saveall(List<Brainstorming> lst) {
+		repo.saveAll(lst);
+		em.flush();
 	}
 
 }

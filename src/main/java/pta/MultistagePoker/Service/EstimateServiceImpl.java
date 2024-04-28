@@ -75,4 +75,9 @@ public class EstimateServiceImpl implements EstimateService {
 		}		
 	}
 
+	@Override
+	public void deleteAll() {
+		repo.deleteAll();
+	}
+
 }

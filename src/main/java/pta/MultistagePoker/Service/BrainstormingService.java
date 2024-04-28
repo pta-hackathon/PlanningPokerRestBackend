@@ -10,6 +10,8 @@ public interface BrainstormingService {
 
 	void postNew(Brainstorming bs);
 
+	void saveall(List<Brainstorming> lst);
+
 	void deleteAll();
 
 }
