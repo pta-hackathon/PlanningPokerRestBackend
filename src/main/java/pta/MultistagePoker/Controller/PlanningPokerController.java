@@ -120,12 +120,22 @@ public class PlanningPokerController {
 	public List<User> getUserListe() {
 		int maxstate=calcMaxStage();
 		List<User> usr= userimpl.getAll();
+		boolean diff=false;
 		for (User u: usr) {
 			int st=calcUserstage(u);
-			if (st==maxstate) {
-				u.setUserstatus("fertig");
-			} else {
+			if (st!=maxstate) diff=true;
+		}
+
+		for (User u: usr) {
+			if (!diff) {
 				u.setUserstatus("warte");
+			} else {
+				int st=calcUserstage(u);
+				if (st==maxstate) {
+					u.setUserstatus("fertig");
+				} else {
+					u.setUserstatus("warte");
+				}
 			}
 		}
 		return usr;
@@ -269,7 +279,12 @@ public class PlanningPokerController {
 		}
 		
 		brainimpl.deleteAll();
-		estimateimpl.deleteAll();
+		
+		for (Estimate e: estimateimpl.getAll()) {
+			if (e.getIdTicket()>=2) {
+				estimateimpl.delete(e.getIdUser(), e.getIdTicket());
+			}
+		}
 		
 		return new ResponseEntity<>(new StatusMsg("ok"), HttpStatus.OK);
 	}
